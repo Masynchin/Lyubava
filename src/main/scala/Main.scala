@@ -23,12 +23,12 @@ object Lyubava extends IOApp.Simple:
       .productR(Console[IO].println("Yahoo!"))
       .foreverM
       .handleErrorWith {
-        case _: TimeoutException => Console[IO].println("Timeout!")
+        case _: TimeoutException => Console[IO].println("\nTimeout!")
         case _: WrongAnswer => Console[IO].println("Wrong answer!")
       }
       .void
 
 def userAttempt(answer: String): IO[String] =
-  Console[IO].println(s"Type this: ${answer}") *> Console[IO].readLine
+  Console[IO].print(s"Type this: ${answer}\n>") *> Console[IO].readLine
 
 final class WrongAnswer extends Exception with NoStackTrace
