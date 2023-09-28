@@ -6,6 +6,7 @@ import cats.effect.{IO, IOApp}
 import cats.effect.std.{Console, Random}
 import scala.concurrent.duration.*
 import cats.Show
+import fansi.Color.{Green, Red}
 
 object Lyubava extends IOApp.Simple:
   val answer = Random.scalaUtilRandom[IO].flatMap { random =>
@@ -20,11 +21,11 @@ object Lyubava extends IOApp.Simple:
       .mproduct(userAttempt)
       .timeoutAndForget(3.seconds)
       .ensure(new WrongAnswer)(_ == _)
-      .productR(Console[IO].println("Yahoo!"))
+      .productR(Console[IO].println(Green("Yahoo!")))
       .foreverM
       .handleErrorWith {
-        case _: TimeoutException => Console[IO].println("\nTimeout!")
-        case _: WrongAnswer => Console[IO].println("Wrong answer!")
+        case _: TimeoutException => Console[IO].println(Red("\nTimeout!"))
+        case _: WrongAnswer => Console[IO].println(Red("Wrong answer!"))
       }
       .void
 
