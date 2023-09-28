@@ -1,15 +1,21 @@
 import cats.implicits.*
 import cats.effect.{IO, IOApp}
-import cats.effect.std.Console
+import cats.effect.std.{Console, Random}
 import scala.concurrent.duration.*
 import cats.Show
 
 object Lyubava extends IOApp.Simple:
-  val answer = "123"
+  val answer = Random.scalaUtilRandom[IO].flatMap { random =>
+    random
+      .nextAlphaNumeric
+      .replicateA(4)
+      .map(_.mkString)
+    }
+
   val run =
     replicate(
       withFeedback(
-        withTimeout(userAttempt(answer), 3.seconds),
+        withTimeout(answer.flatMap(userAttempt), 3.seconds),
         _.fold("Timeout!")(Function.const("Yahoo!"))
       )
     ).void
