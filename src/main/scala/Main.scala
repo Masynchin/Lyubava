@@ -1,4 +1,5 @@
 import java.util.concurrent.TimeoutException
+import scala.util.control.NoStackTrace
 
 import cats.implicits.*
 import cats.effect.{IO, IOApp}
@@ -16,14 +17,18 @@ object Lyubava extends IOApp.Simple:
 
   val run =
     answer
-      .flatMap(userAttempt)
+      .mproduct(userAttempt)
       .timeoutAndForget(3.seconds)
+      .ensure(new WrongAnswer)(_ == _)
       .productR(Console[IO].println("Yahoo!"))
       .foreverM
       .handleErrorWith {
         case _: TimeoutException => Console[IO].println("Timeout!")
+        case _: WrongAnswer => Console[IO].println("Wrong answer!")
       }
       .void
 
 def userAttempt(answer: String): IO[String] =
   Console[IO].println(s"Type this: ${answer}") *> Console[IO].readLine
+
+final class WrongAnswer extends Exception with NoStackTrace
