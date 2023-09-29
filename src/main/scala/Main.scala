@@ -23,12 +23,10 @@ object Lyubava extends IOApp.Simple:
       .void
 
 def answer(length: Int): IO[String] =
-  Random.scalaUtilRandom[IO].flatMap { random =>
-    random
-      .nextAlphaNumeric
-      .replicateA(length)
-      .map(_.mkString)
-    }
+  Random.scalaUtilRandom[IO]
+    .flatMap(_.nextAlphaNumeric)
+    .replicateA(length)
+    .map(_.mkString)
 
 def userAttempt(answer: String): IO[String] =
   Console[IO].print(s"Type this: ${answer}\n>") *> Console[IO].readLine
