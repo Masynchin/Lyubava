@@ -9,15 +9,8 @@ import cats.Show
 import fansi.Color.{Green, Red}
 
 object Lyubava extends IOApp.Simple:
-  val answer = Random.scalaUtilRandom[IO].flatMap { random =>
-    random
-      .nextAlphaNumeric
-      .replicateA(4)
-      .map(_.mkString)
-    }
-
   val run =
-    answer
+    answer(4)
       .mproduct(userAttempt)
       .timeoutAndForget(3.seconds)
       .ensure(new WrongAnswer)(_ == _)
@@ -28,6 +21,14 @@ object Lyubava extends IOApp.Simple:
         case _: WrongAnswer => Console[IO].println(Red("Wrong answer!"))
       }
       .void
+
+def answer(length: Int): IO[String] =
+  Random.scalaUtilRandom[IO].flatMap { random =>
+    random
+      .nextAlphaNumeric
+      .replicateA(length)
+      .map(_.mkString)
+    }
 
 def userAttempt(answer: String): IO[String] =
   Console[IO].print(s"Type this: ${answer}\n>") *> Console[IO].readLine
