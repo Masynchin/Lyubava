@@ -1,3 +1,7 @@
+//> using dep org.typelevel::cats-core:2.10.0
+//> using dep org.typelevel::cats-effect:3.5.2
+//> using dep com.lihaoyi::fansi:0.4.0
+
 import java.util.concurrent.TimeoutException
 import scala.util.control.NoStackTrace
 

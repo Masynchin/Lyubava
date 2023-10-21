@@ -5,7 +5,7 @@ of time.
 
 ## Running
 
-You should have `git` and `sbt` installed.
+You should have `git` and either `sbt` or `scala-cli` installed.
 
 Clone this repo:
 
@@ -18,4 +18,10 @@ And run with `sbt`:
 
 ~~~shell
 sbt run
+~~~
+
+Or with `scala-cli`:
+
+~~~shell
+scala-cli run src/main/scala/Main.scala
 ~~~
