@@ -25,3 +25,12 @@ Or with `scala-cli`:
 ~~~shell
 scala-cli run src/main/scala/Main.scala
 ~~~
+
+## Options
+
+You can specify amount of symbols in answer to be typed with `-l`/`--length`
+option, and time to type with option `-t`/`--timeout`:
+
+~~~shell
+scala-cli run src/main/scala/Main.scala -- --length 10 --timeout 7s
+~~~
