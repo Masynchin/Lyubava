@@ -22,10 +22,20 @@ object Lyubava extends CommandIOApp(
   version = "0.1.0",
 ):
   def main: Opts[IO[ExitCode]] =
-    (
-      Opts.option[Int]("length", short="n", metavar="symbols", help="Answer length to be inputted").withDefault(4),
-      Opts.option[Duration]("timeout", short="t", help="Time to answer").withDefault(3.seconds),
-    ).mapN(run)
+    (lengthOption, timeoutOption).mapN(run)
+
+  val lengthOption =
+    Opts.option[Int](
+      "length",
+      short="n",
+      metavar="symbols",
+      help="Answer length to be inputted"
+    ).withDefault(4)
+
+  val timeoutOption =
+    Opts.option[Duration](
+      "timeout", short="t", help="Time to answer"
+    ).withDefault(3.seconds)
     
   def run(length: Int, timeout: Duration) =
     answer(length)
