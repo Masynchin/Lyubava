@@ -22,7 +22,7 @@ object Lyubava extends CommandIOApp(
   version = "0.1.0",
 ):
   def main: Opts[IO[ExitCode]] =
-    (lengthOption, timeoutOption).mapN(run)
+    (lengthOption, timeoutOption).mapN(runCats)
 
   val lengthOption =
     Opts.option[Int](
@@ -37,18 +37,18 @@ object Lyubava extends CommandIOApp(
       "timeout", short="t", help="Time to answer"
     ).withDefault(3.seconds)
     
-  def run(length: Int, timeout: Duration) =
-    answer(length)
-      .mproduct(userAttempt)
-      .timeoutAndForget(timeout)
-      .ensure(new WrongAnswer)(_ == _)
-      .productR(Console[IO].println(Green("Yahoo!")))
-      .foreverM
-      .handleErrorWith {
-        case _: TimeoutException => Console[IO].println(Red("\nTimeout!"))
-        case _: WrongAnswer => Console[IO].println(Red("Wrong answer!"))
-      }
-      .as(ExitCode.Success)
+def runCats(length: Int, timeout: Duration) =
+  answer(length)
+    .mproduct(userAttempt)
+    .timeoutAndForget(timeout)
+    .ensure(new WrongAnswer)(_ == _)
+    .productR(Console[IO].println(Green("Yahoo!")))
+    .foreverM
+    .handleErrorWith {
+      case _: TimeoutException => Console[IO].println(Red("\nTimeout!"))
+      case _: WrongAnswer => Console[IO].println(Red("Wrong answer!"))
+    }
+    .as(ExitCode.Success)
 
 def answer(length: Int): IO[String] =
   Random.scalaUtilRandom[IO]
